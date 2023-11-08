@@ -6,6 +6,9 @@
     {
       "label": "build",
       "type": "shell",
+      "windows": {
+        "command": "build.bat"
+      },
       "command": "pyinstaller main.spec --noconfirm && cd dist/main/ && main.exe",
       "presentation": {
         "reveal": "silent",
