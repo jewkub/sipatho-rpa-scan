@@ -4,12 +4,24 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build",
+      "label": "Rename: build",
       "type": "shell",
       "windows": {
-        "command": "build.bat"
+        "command": "cd rename && build.bat"
       },
-      "command": "pyinstaller main.spec --noconfirm && cd dist/main/ && main.exe",
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "close": true
+      }
+    },
+    {
+      "label": "Attach: build",
+      "type": "shell",
+      "windows": {
+        "command": "cd attach && build.bat"
+      },
+      "group": "build",
       "presentation": {
         "reveal": "silent",
         "close": true

@@ -12,14 +12,10 @@ import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-root = tkinter.Tk()
-root.withdraw() # use to hide tkinter window
-
 def get_path(prompt):
-  currdir = Path.cwd()
   tempdir = filedialog.askdirectory(
     parent=root,
-    initialdir=currdir,
+    initialdir=Path.cwd(),
     title='Select a directory for ' + prompt + ' files',
   )
   if len(tempdir) > 0:
@@ -84,6 +80,9 @@ if __name__ == "__main__":
   # print(Path.cwd())
   # DIRNAME = Path(__file__).parent.resolve()
   # print(DIRNAME.as_posix())
+  root = tkinter.Tk()
+  root.withdraw() # use to hide tkinter window
+
   scanned_path = get_path('scanned')
   if len(scanned_path) == 0:
     sys.exit(0)
