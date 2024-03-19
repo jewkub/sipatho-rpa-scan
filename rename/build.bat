@@ -1,5 +1,5 @@
 pyinstaller rename.spec --noconfirm
 cd dist/rename/
-mkdir scanned
+mkdir raw
 mkdir renamed
-rename.exe
+mkdir image
