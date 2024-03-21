@@ -10,7 +10,8 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "justMyCode": true
+      "justMyCode": true,
+      "cwd": "${fileDirname}" // https://code.visualstudio.com/docs/editor/variables-reference#_predefined-variables
     }
   ]
 }

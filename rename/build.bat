@@ -1,5 +1,6 @@
 pyinstaller rename.spec --noconfirm
 cd dist/rename/
-mkdir raw
+robocopy test dist/rename/raw /E
 mkdir renamed
-mkdir image
+robocopy poppler dist/rename/poppler /E
+:: https://stackoverflow.com/a/42070127/4468834
