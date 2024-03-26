@@ -1,13 +1,9 @@
-import os, time
+import os, time, sys
 from datetime import datetime
 from pdf2image import convert_from_path
 import pandas as pd
-import glob
-import cv2
+import glob, cv2, easyocr, re, shutil, fitz
 import numpy as np
-import easyocr
-import re
-import shutil
 
 start = time.time()
 path_img = f"{os.path.dirname(__file__)}\\image"
@@ -29,13 +25,43 @@ def readOCR(reader: easyocr.Reader, file_name: str, image: np.ndarray):
       copy_and_rename(file_name, path_renamed, new_name+".pdf")
       found = True
       break
-    # TODO: consider appropriate handle multiple match in one image
 
   # if found:
   #   return True, new_name
   # else:
   #   return False, file_name
   return (True, new_name) if found else (False, file_name)
+
+# For checking whether the page is empty or not.
+def check_page(page):
+  text = page.get_text()
+  return len(text.strip()) == 0
+
+def remove_empty_page(inputfile_path):
+  # inputfile_path = r"D:\git\sipatho-rpa-scan\rename\added_blankpage.pdf"
+  # outputfile_path = r"D:\git\sipatho-rpa-scan\rename\editted.pdf"
+  temp_file = r'.\temp_pdf.png'
+  images = convert_from_path(inputfile_path, fmt='png',poppler_path=r"C:\Users\jewna\Downloads\Release-24.02.0-0\poppler-24.02.0\Library\bin")
+  input_pdf = fitz.open(inputfile_path)
+  output_pdf = fitz.open()
+  for pgno in range(input_pdf.page_count):
+    # print(pgno)
+    page = input_pdf[pgno]
+    if not check_page(page):
+      output_pdf.insert_pdf(input_pdf,from_page=pgno,to_page = pgno)
+    else:
+      print('Page No:',pgno)
+      # pix = page.get_pixmap()
+      # pix.save(temp_file)
+      img_page = images[pgno]
+      img_page.save(temp_file)
+      result = reader.readtext(temp_file)
+      print('Success to read')
+      if len(result) > 0:
+        output_pdf.insert_pdf(input_pdf,from_page=pgno,to_page = pgno)
+  output_pdf.save(inputfile_path + "noblank.pdf")
+  output_pdf.close()
+  input_pdf.close()
 
 def read_pdf(file_name, reader):
   if os.path.exists("renamed_file.csv"):
@@ -91,6 +117,9 @@ def read_pdf(file_name, reader):
 
 if __name__ == "__main__":
   for file in glob.glob(pdf_origin_path + r"\*.pdf"):
+    remove_empty_page(file)
     read_pdf(file, reader)
   end = time.time()
-  print(f'All process successful in {end-start:.2f} sec')
+  print(f'Rename successful in {end-start:.2f} sec')
+  # for file in glob.glob(path_renamed + r"\*.pdf"):
+  #   print(file)
