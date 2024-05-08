@@ -11,7 +11,7 @@
       },
       "group": "build",
       "presentation": {
-        "reveal": "silent",
+        "reveal": "always",
         "close": true
       }
     },
